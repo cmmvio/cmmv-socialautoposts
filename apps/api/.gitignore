@@ -1,0 +1,6 @@
+database.sqlite
+database.sqlite.filepart
+./medias
+medias/*
+cache/*
+cache

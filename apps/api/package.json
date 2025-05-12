@@ -1,0 +1,33 @@
+{
+    "name": "cmmv-socialautoposts-api",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Social Auto Posts API sample",
+    "dev": {
+        "watch": [
+            "src"
+        ],
+        "ignore": [
+            ".generated",
+            "**/*.spec.ts",
+            "src/app.module.ts",
+            "database.sqlite-journal",
+            "database.sqlite"
+        ]
+    },
+    "scripts": {
+        "dev": "cmmv dev --watch --debug",
+        "build": "tsup",
+        "start": "cmmv dev"
+    },
+    "dependencies": {
+        "@cmmv/auth": "latest",
+        "@cmmv/cache": "^0.11.6",
+        "@cmmv/cli": "latest",
+        "@cmmv/http": "latest",
+        "@cmmv/repository": "latest"
+    },
+    "devDependencies": {
+        "tsconfig-paths": "^4.2.0"
+    }
+}
