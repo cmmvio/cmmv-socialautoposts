@@ -20,8 +20,7 @@ module.exports = [
         files: ["src/**/*.ts", "apps/**/*.ts", "libs/**/*.ts", "test/**/*.ts"],
         ignores: ["node_modules", "dist", "build", ".generated", "eslint.config.js"],
         plugins: {
-            "@typescript-eslint": tseslint,
-            prettier
+            "@typescript-eslint": tseslint
         },
         rules: {
             ...tseslint.configs.recommended.rules,

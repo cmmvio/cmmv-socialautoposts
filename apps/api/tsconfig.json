@@ -49,19 +49,7 @@
             "@generated": [".generated"],
             "@generated/*": [".generated/*"],
             "@g": [".generated"],
-            "@g/*": [".generated/*"],
-            "@cmmv/blog": ["../../packages/plugin/api"],
-            "@cmmv/blog/*": ["../../packages/plugin/api/*"],
-            "@cmmv/access-control": ["../../packages/access-control/api"],
-            "@cmmv/access-control/*": ["../../packages/access-control/api/*"],
-            "@cmmv/rss-aggregation": ["../../packages/rss-aggregation/api"],
-            "@cmmv/rss-aggregation/*": ["../../packages/rss-aggregation/api/*"],
-            "@cmmv/ai-content": ["../../packages/ai-content"],
-            "@cmmv/ai-content/*": ["../../packages/ai-content/*"],
-            "@cmmv/yt-aggregation": ["../../packages/yt-aggregation/api"],
-            "@cmmv/yt-aggregation/*": ["../../packages/yt-aggregation/api/*"],
-            "@cmmv/affiliate": ["../../packages/affiliate/api"],
-            "@cmmv/affiliate/*": ["../../packages/affiliate/api/*"]
+            "@g/*": [".generated/*"]
         }
     },
     "include": ["src/**/*", ".generated/**/*"],
