@@ -1,275 +1,154 @@
 <p align="center">
   <a href="https://cmmv.io/" target="blank"><img src="https://raw.githubusercontent.com/cmmvio/docs.cmmv.io/main/public/assets/logo_CMMV2_icon.png" width="300" alt="CMMV Logo" /></a>
 </p>
-<p align="center">CMMV Blog <br/> A powerful, framework-agnostic blog system for Contract-Model-Model-View applications.</p>
+<p align="center">CMMV Social AutoPosts <br/> An advanced social media automation platform for managing and scheduling content across multiple networks.</p>
 <p align="center">
-    <a href="https://www.npmjs.com/package/@cmmv/blog"><img src="https://img.shields.io/npm/v/@cmmv/blog.svg" alt="NPM Version" /></a>
-    <a href="https://github.com/cmmvio/cmmv-blog/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@cmmv/blog.svg" alt="Package License" /></a>
+    <a href="https://github.com/cmmvio/cmmv-socialautoposts/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@cmmv/socialautoposts.svg" alt="Package License" /></a>
 </p>
 
 <p align="center">
   <a href="https://cmmv.io/docs">Documentation</a> &bull;
-  <a href="https://github.com/cmmvio/cmmv-blog/issues">Report Issue</a>
+  <a href="https://github.com/cmmvio/cmmv-socialautoposts/issues">Report Issue</a>
 </p>
 
 ## Description
 
-CMMV Blog is a versatile, high-performance blog system designed to work seamlessly with any frontend framework. It provides a consistent API interface that can be used with Vue.js, React, Angular, or vanilla JavaScript applications, making it an ideal choice for projects requiring flexibility and cross-framework compatibility.
+CMMV Social AutoPosts is a comprehensive social media automation platform designed to streamline content publishing across multiple social platforms. It provides an intuitive interface for connecting social accounts, managing content feeds, scheduling posts, and tracking engagement metrics all in one place.
 
-Built on the CMMV (Contract-Model-Model-View) architecture, this blog system leverages contract-based development to automate API communication, data fetching, and content rendering. The system supports server-side rendering (SSR), SEO optimization, and structured data through LD+JSON, ensuring your blog content is discoverable and properly indexed.
-
-## Philosophy
-
-CMMV Blog simplifies content management by providing a unified client API across different frameworks. It focuses on **performance**, **flexibility**, and **developer experience**, allowing you to use your preferred framework while maintaining a consistent API interface for interacting with your blog content.
+Built on the CMMV (Contract-Model-Model-View) architecture, this platform leverages contract-based development to automate API communication, content scheduling, and multi-platform publishing. The system supports OAuth integration with popular social networks, URL shortening with analytics, and a flexible queue system for content management.
 
 ## Features
 
-- **Framework-Agnostic:** Use with Vue.js, React, Angular, or vanilla JavaScript
-- **Unified API:** Consistent client API regardless of the frontend framework
-- **SEO Optimization:** Built-in support for meta tags and structured data
-- **Server-Side Rendering:** Compatible with SSR for better performance and SEO
-- **Type Safety:** Full TypeScript support with proper type definitions
-- **Analytics Integration:** Built-in support for tracking page views and user engagement
-- **Responsive Images:** Automatic handling of responsive images with proper dimensions
-- **Extensible:** Easy to extend and customize for specific needs
+- **Multi-Platform Integration:** Connect and post to Facebook, Twitter/X, Instagram, LinkedIn, and more
+- **Feed Management:** Automatically collect and publish content from RSS feeds
+- **Post Queue:** Manage scheduled posts with custom publishing times
+- **URL Shortening:** Create branded short links with click tracking and analytics
+- **Publishing Options:** Post immediately, schedule for later, or approve manually
+- **Performance Analytics:** Track engagement metrics across posts and platforms
+- **Social Account Management:** Securely manage multiple social media accounts
+- **Dashboard:** Centralized view of key metrics and performance indicators
 
-## Installation
+## Getting Started
 
-```bash
-$ pnpm add @cmmv/blog
-```
+### Prerequisites
 
-## Dependencies
+- Node.js (version 16 or higher)
+- PNPM package manager
 
-CMMV Blog uses skia-canvas for image processing, which requires some system dependencies to be installed, especially on Linux environments:
-
-```bash
-# For Debian/Ubuntu-based distributions
-sudo apt update
-sudo apt install -y libfontconfig1
-```
-
-### Handling Installation Issues
-
-During installation, you may encounter build errors related to native dependencies like skia-canvas. If you're using pnpm and get build approval requests, you can use:
+### Installation
 
 ```bash
-pnpm install --approve-builds
+# Clone the repository
+git clone https://github.com/cmmvio/cmmv-socialautoposts.git
+
+# Navigate to the project directory
+cd cmmv-socialautoposts
+
+# Install dependencies
+pnpm install
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env file with your settings
+
+# Start the development server
+pnpm dev
 ```
 
-If the above doesn't work, forcing the installation typically resolves the issue:
+## Core Components
 
-```bash
-pnpm install --force
-```
+### Social Media Integration
 
-Note: If you're using another package manager like npm or yarn, you might not encounter these specific build issues, but similar solutions apply if needed.
+CMMV Social AutoPosts supports OAuth-based integration with multiple social platforms:
 
-## Quick Start
+- **Facebook:** Post to pages and profiles
+- **Twitter/X:** Share tweets with media support
+- **Instagram:** Connect business accounts for posting
+- **LinkedIn:** Publish to personal profiles and company pages
+- **Reddit:** Submit to subreddits
+- **Other platforms:** Extensible system for additional networks
 
-Here's how to use CMMV Blog with different frameworks:
+### Feed Management
 
-### Vue.js
+The platform allows you to connect and manage content sources:
 
-```typescript
-// In your main.ts or main.js
-import { createApp } from 'vue';
-import App from './App.vue';
-import { useBlog } from '@cmmv/blog/client/client.vue3';
+- **RSS Feeds:** Automatically ingest content from any RSS/Atom feed
+- **Content Filtering:** Set rules to include or exclude content
+- **Publishing Rules:** Configure how and when content is shared
+- **Social Platform Selection:** Choose which platforms receive content from each feed
 
-const app = createApp(App);
+### Queue Management
 
-// Register the blog API globally
-app.provide('blog', useBlog());
+A flexible queue system for scheduling and managing posts:
 
-app.mount('#app');
+- **Scheduling:** Set custom publishing times for optimal engagement
+- **Post Preview:** See how content will appear on each platform
+- **Bulk Operations:** Schedule, edit, or delete multiple posts at once
+- **Status Tracking:** Monitor whether posts have been published or are pending
 
-// In a component
-<script setup>
-import { inject, onMounted, ref } from 'vue';
+### URL Shortener
 
-const blog = inject('blog');
-const posts = ref([]);
+Built-in URL shortening service with tracking capabilities:
 
-onMounted(async () => {
-  posts.value = await blog.getPosts();
-});
-</script>
-```
+- **Custom Domains:** Use your own domain for branded short links
+- **Click Analytics:** Track clicks, referrers, and geographical data
+- **Link Management:** Create, edit, and organize shortened URLs
+- **Automatic Shortening:** Optionally shorten URLs in all posts
 
-### React
+### Analytics Dashboard
 
-```typescript
-// In your component
-import { useEffect, useState } from 'react';
-import { useBlog } from '@cmmv/blog/client/client.react';
+Comprehensive reporting on post performance:
 
-function BlogPosts() {
-  const blog = useBlog();
-  const [posts, setPosts] = useState([]);
-  
-  useEffect(() => {
-    async function fetchPosts() {
-      const { data } = await blog.posts.getAll();
-      if (data) {
-        setPosts(data);
-      }
-    }
-    
-    fetchPosts();
-  }, []);
-  
-  return (
-    <div>
-      {posts.map(post => (
-        <article key={post.id}>
-          <h2>{post.title}</h2>
-          <p>{post.excerpt}</p>
-        </article>
-      ))}
-    </div>
-  );
-}
-```
-
-### Angular
-
-```typescript
-// In your service
-import { Injectable } from '@angular/core';
-import { BlogService } from '@cmmv/blog/client/client.angular';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class MyBlogService {
-  constructor(private blogService: BlogService) {}
-  
-  getPosts() {
-    return this.blogService.getPosts();
-  }
-}
-
-// In your component
-import { Component, OnInit } from '@angular/core';
-import { MyBlogService } from './my-blog.service';
-
-@Component({
-  selector: 'app-blog',
-  template: `
-    <div *ngFor="let post of posts$ | async">
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.excerpt }}</p>
-    </div>
-  `
-})
-export class BlogComponent implements OnInit {
-  posts$ = this.blogService.getPosts();
-  
-  constructor(private blogService: MyBlogService) {}
-  
-  ngOnInit() {}
-}
-```
-
-### Vanilla JavaScript
-
-```javascript
-import { createBlogClient } from '@cmmv/blog/client/client.vanilla';
-
-const blog = createBlogClient();
-
-async function loadPosts() {
-  const posts = await blog.getPosts();
-  
-  posts.forEach(post => {
-    const article = document.createElement('article');
-    const title = document.createElement('h2');
-    title.textContent = post.title;
-    
-    const excerpt = document.createElement('p');
-    excerpt.textContent = post.excerpt;
-    
-    article.appendChild(title);
-    article.appendChild(excerpt);
-    document.getElementById('blog-posts').appendChild(article);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', loadPosts);
-```
+- **Engagement Metrics:** Track clicks, views, shares, and comments
+- **Platform Comparison:** Compare performance across different networks
+- **Time-based Analysis:** View trends over time
+- **Top Content:** Identify your most successful posts
 
 ## API Reference
 
-CMMV Blog provides the following core functionalities across all framework implementations:
+The platform provides a comprehensive API for integration with other systems:
 
-### Posts
+### Authentication
+- `POST /api/auth/login`: Authenticate user
+- `POST /api/auth/logout`: End current session
+- `GET /api/auth/check`: Verify authentication status
 
-- `getPosts(offset?: number)`: Get a list of published posts
-- `getPostById(id: string)`: Get a post by its ID
-- `getPostBySlug(slug: string)`: Get a post by its slug
-- `getPostByAuthor(author: string)`: Get posts by a specific author
-- `searchPosts(query: string)`: Search posts by title
+### Feeds
+- `GET /api/feeds`: Get all feeds
+- `POST /api/feeds`: Create a new feed
+- `PUT /api/feeds/:id`: Update a feed
+- `DELETE /api/feeds/:id`: Delete a feed
 
-### Categories
+### Queue
+- `GET /api/queue`: Get queued items
+- `PUT /api/feed-items/:id/status`: Update item status
+- `GET /api/feed-items/:id`: Get details for a queue item
 
-- `getAllCategories()`: Get all blog categories
-- `getCategoryById(id: string)`: Get a category by its ID
-- `getCategoryBySlug(slug: string)`: Get a category by its slug
+### Short Links
+- `GET /api/shortlinks`: Get all short links
+- `POST /api/shortlinks`: Create a new short link
+- `PUT /api/shortlinks/:id`: Update a short link
 
-### Tags
-
-- `getAllTags()`: Get all blog tags
-- `getPostsByTagSlug(tagSlug: string)`: Get posts with a specific tag
-
-### Pages
-
-- `getPageById(id: string)`: Get a page by its ID
-- `getPageBySlug(slug: string)`: Get a page by its slug
-
-### Authors
-
-- `getAuthorById(id: string)`: Get an author by their ID
-- `getAuthorBySlug(slug: string)`: Get an author by their slug
-
-### Members
-
-- `createMember(payload: any)`: Create a new member
-- `getMemberProfile(id: string)`: Get a member's profile
-- `getMyProfile()`: Get the current member's profile
-- `updateMemberProfile(id: string, payload: any)`: Update a member's profile
-
-### Analytics
-
-- `registerAnalyticsAccess(path?: string)`: Register a page view
-- `registerAnalyticsUnload(path?: string)`: Register a page exit
-
-### Settings
-
-- `getAllSettings()`: Get all blog settings
-
-## Structured Data (LD+JSON)
-
-CMMV Blog includes support for structured data to improve SEO:
-
-```typescript
-import { createLdJSON } from '@cmmv/blog/client';
-
-// In your post component
-const ldJson = createLdJSON('post', postData, settings);
-
-// Add to your <head> section
-<script type="application/ld+json">
-  {JSON.stringify(ldJson)}
-</script>
-```
+### Social Integrations
+- `GET /api/integrations`: Get connected social accounts
+- `POST /api/integration/:platform/connect`: Connect a social account
+- `DELETE /api/integrations/:id`: Remove a social account
 
 ## Configuration
 
-Configure the blog API endpoint in your environment variables:
+Configure the application by editing the environment variables:
 
 ```
-VITE_API_URL=http://localhost:5000
-VITE_API_URL_FRONT=http://localhost:5000
-VITE_WEBSITE_URL=https://myblog.com
+# API Settings
+PORT=7000
+FRONTEND_URL="http://localhost:7002/api"
+
+FACEBOOK_APP_ID=""
+FACEBOOK_APP_SECRET=""
+
+INSTAGRAM_APP_ID=""
+INSTAGRAM_APP_SECRET=""
+
+TWITTER_CLIENT_ID=""
+TWITTER_CLIENT_SECRET=""
 ```
