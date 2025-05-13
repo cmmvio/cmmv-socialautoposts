@@ -72,6 +72,13 @@ export class IntegrationsContract extends AbstractContract {
         nullable: true,
         index: true,
     })
+    pageAccessToken?: string;
+
+    @ContractField({
+        protoType: "string",
+        nullable: true,
+        index: true,
+    })
     pageId?: string;
 
     @ContractField({

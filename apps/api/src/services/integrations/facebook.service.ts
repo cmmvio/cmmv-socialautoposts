@@ -112,7 +112,8 @@ export class FacebookService {
         await Repository.update(IntegrationsEntity, integration.id, {
             pageId: payload.pageId,
             name: payload.pageName,
-            image: payload.avatar
+            image: payload.avatar,
+            pageAccessToken: payload.accessToken
         });
 
         return { success: true };
@@ -141,22 +142,11 @@ export class FacebookService {
     /**
      * Post to a page
      * @param pageId - The page ID
-     * @param userAccessToken - The user access token
+     * @param pageAccessToken - The user access token
      * @param message - The message to post
      * @returns The post
      */
-    async postToPage(pageId: string, userAccessToken: string, message: string) {
-        const tokenUrl = new URL(`${this.graphUrl}/${pageId}`);
-        tokenUrl.searchParams.set("fields", "access_token");
-        tokenUrl.searchParams.set("access_token", userAccessToken);
-
-        const tokenRes = await fetch(tokenUrl.toString());
-        const tokenData = await tokenRes.json();
-
-        if (!tokenRes.ok) throw new Error(tokenData.error?.message || "Erro ao obter token da página");
-
-        const pageAccessToken = tokenData.access_token;
-
+    async postToPage(pageId: string, pageAccessToken: string, message: string, link?: string) {
         const postUrl = `${this.graphUrl}/${pageId}/feed`;
         const postRes = await fetch(postUrl, {
             method: "POST",
@@ -165,6 +155,8 @@ export class FacebookService {
             },
             body: new URLSearchParams({
                 message,
+                link,
+                published: "true",
                 access_token: pageAccessToken
             })
         });

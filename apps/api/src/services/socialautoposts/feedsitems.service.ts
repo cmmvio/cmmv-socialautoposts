@@ -1,12 +1,13 @@
 import * as xml2js from 'xml2js';
 
 import {
-    Service, Cron, CronExpression
+    Service, Cron, CronExpression,
+    Application
 } from '@cmmv/core';
 
 import {
     Repository,
-    RepositorySchema
+    RepositorySchema, In
 } from "@cmmv/repository";
 
 import {
@@ -18,6 +19,8 @@ import { FeedsItemsEntity } from "@entities/socialautoposts/feedsitems.entity";
 
 import { Feeds } from "@models/socialautoposts/feeds.model";
 import { FeedsItems } from "@models/socialautoposts/feedsitems.model";
+
+import { FacebookService } from "@services/integrations/facebook.service";
 
 interface RssItem {
     link: string;
@@ -43,13 +46,15 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
     protected schemaFeeds = new RepositorySchema(FeedsEntity, Feeds, false, true, false);
     protected schema = new RepositorySchema(FeedsItemsEntity, FeedsItems, false, true, false);
 
-    @Cron(CronExpression.EVERY_5_MINUTES)
+    @Cron(CronExpression.EVERY_MINUTE)
     async handleFeedsItems() {
         const FeedsEntity = Repository.getEntity("FeedsEntity");
+        const FeedsItemsEntity = Repository.getEntity("FeedsItemsEntity");
+
         const feeds = await Repository.findAll(FeedsEntity, {
             limit: 100000
         }, [], {
-            select: ["id", "link", "account"]
+            select: ["id", "link", "account", "socials"]
         });
 
         for (const feed of feeds.data) {
@@ -58,7 +63,21 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
             if (!feedData)
                 continue;
 
-            await this.processFeedItem(feedData, feed.id, feed.account);
+            await this.processFeedItem(feedData, feed.id, feed.account, feed.socials);
+        }
+
+        const feedsItems = await Repository.findAll(FeedsItemsEntity, {
+            limit: 100,
+            processed: false
+        }, [], {
+            order: {
+                pubDate: "ASC"
+            },
+            select: ["id", "title", "description", "image", "link", "pubDate", "socials"]
+        });
+
+        for (const feedsItem of feedsItems.data) {
+            await this.processFeedsItem.call(this, feedsItem);
         }
     }
 
@@ -100,7 +119,12 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
      * @param feedId - The ID of the feed to process
      * @returns The result of the processing
      */
-    async processFeedItem(feedData: any, feedId: string, accountId: string) {
+    async processFeedItem(
+        feedData: any,
+        feedId: string,
+        accountId: string,
+        socials: string[]
+    ) {
         try {
             let items = [];
             let feedType = '';
@@ -138,7 +162,7 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
                 processedCount++;
 
                 try {
-                    const itemPromise = this.processFeedItemSafely(item, feedType, feedId, accountId);
+                    const itemPromise = this.processFeedItemSafely(item, feedType, feedId, accountId, socials);
 
                     const result = await Promise.race([
                         itemPromise,
@@ -170,7 +194,8 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
         item: any,
         feedType: string,
         feedId: string,
-        accountId: string
+        accountId: string,
+        socials: string[]
     ): Promise<{ success: boolean, message?: string }> {
 
         try {
@@ -265,11 +290,12 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
                 feed: feedId,
                 account: accountId,
                 processed: false,
+                socials: socials,
                 createdAt: new Date(),
                 updatedAt: new Date()
             };
 
-            const result = await Repository.insert(FeedsItemsEntity, newItem);
+            await Repository.insert(FeedsItemsEntity, newItem);
 
             return;
         } catch (error) {}
@@ -287,6 +313,45 @@ export class FeedsItemsService extends FeedsItemsServiceGenerated {
             offset: queries.offset || 0,
             limit: queries.limit || 10,
             processed: (queries.processed === 'true') ? true : false,
+        });
+    }
+
+    /**
+     * Process the feeds item
+     * @param feedsItem - The feeds item
+     */
+    async processFeedsItem(feedsItem: any) {
+        const IntegrationsEntity = Repository.getEntity("IntegrationsEntity");
+        const FeedsItemsEntity = Repository.getEntity("FeedsItemsEntity");
+
+        if(feedsItem.socials && feedsItem.socials.length > 0) {
+            const integrations = await Repository.findAll(IntegrationsEntity, {
+                id: In(feedsItem.socials)
+            });
+
+            for (const integration of integrations.data) {
+                switch(integration.type) {
+                    case "facebook":
+                        const facebookService = Application.resolveProvider(FacebookService);
+
+                        await facebookService.postToPage(
+                            integration.pageId,
+                            integration.pageAccessToken,
+                            feedsItem.title,
+                            feedsItem.link
+                        );
+
+                        console.log(`Posted to Facebook: ${feedsItem.title}`);
+                    break;
+                }
+            }
+        }
+
+        await Repository.update(FeedsItemsEntity, {
+            id: feedsItem.id
+        }, {
+            processed: true,
+            processedAt: new Date()
         });
     }
 }
